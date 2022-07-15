@@ -1,0 +1,45 @@
+.header{
+box-shadow: 0px 1px 3px lightgrey;
+}
+
+.header-row{
+    height: 120px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    position: relative;
+}
+
+.header__logo{
+    width: 100px;
+    align-self: center;
+    position: absolute;
+    left: 50%;
+    margin-left: -50px;
+}
+
+
+.display{
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+    img{
+        margin: 0px 5px;
+    }
+    span{
+        margin-left: 5px;
+    }
+}
+
+.display__flag{
+    width: 30px;
+    height: auto;
+}
+
+.display__name {
+}
+
+.display__value{
+
+}
