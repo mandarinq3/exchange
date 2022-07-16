@@ -7,21 +7,12 @@ import {connect} from 'react-redux';
 function App(props) {
   useEffect(()=>{
     if(props.rates===null){
-        let myHeaders = new Headers();
-        myHeaders.append("apikey", "iGiztYWrMCToyd7y7XEFnyZPVKGAqbR6");
-
-        let requestOptions = {
-        method: 'GET',
-        redirect: 'follow',
-        headers: myHeaders
-        };
-
-        fetch("https://api.apilayer.com/fixer/latest?symbols=EUR,USD,UAH&base=UAH", requestOptions)
+        fetch("https://api.fastforex.io//fetch-multi?from=UAH&to=EUR,USD,UAH&api_key=489d29ef3e-0d1c851dc4-rf4e9m")
         .then(response => response.json())
         .then((result) => {
         props.dispatch({
         type:'GOT_RATES',
-        rates:result.rates
+        rates:result.results
         })
         })
         .catch(error => console.log('error', error));

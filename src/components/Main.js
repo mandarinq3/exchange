@@ -11,38 +11,24 @@ function Main(props) {
         payCurrency:props.payCurrency,
         getCurrency:props.getCurrency
     }
-    const [payInpVal, setPayInpVal] = useState();
-    const [getInpVal, setGetInpVal] = useState();
+    const [payInpVal, setPayInpVal] = useState('');
+    const [getInpVal, setGetInpVal] = useState('');
 
     let payInputRef=useRef(null);
     let getInputRef=useRef(null);
     let paySelectRef=useRef(null);
     let getSelectRef=useRef(null);
 
-function roundResult(n){
-    console.log('n',n)
-    n+='';
-    let b=n.split('.');
-    if(b.length>1){
-        let rightPart=b[1][0]+b[1][1]+b[1][2];
-        let result=+`${b[0]}.${rightPart}`;
-        return result
-    }else{
-        return +n;
-    }
-
-}
-
 function payInpHandler(){
     setPayInpVal(payInputRef.current.value);
     let val=payInputRef.current.value/props.rates[`${props.payCurrency}`]*props.rates[`${props.getCurrency}`];
-    setGetInpVal(roundResult(val));
+    setGetInpVal(props.roundResult(val));
 }
 
 function getInpHandler(){
     setGetInpVal(getInputRef.current.value);
     let val=getInputRef.current.value*props.rates[`${props.payCurrency}`]/props.rates[`${props.getCurrency}`];
-    setPayInpVal(roundResult(val));
+    setPayInpVal(props.roundResult(val));
 
 }
 
@@ -71,7 +57,7 @@ function getSelectHandler(){
     })
     if(payInputRef.current.value!=''){
         let val=payInputRef.current.value/props.rates[`${props.payCurrency}`]*props.rates[`${getSelectRef.current.value}`];
-        setGetInpVal(roundResult(val));
+        setGetInpVal(props.roundResult(val));
     }else{
         setGetInpVal('')
         getInputRef.current.focus();
@@ -191,6 +177,7 @@ function swapForms(){
         rates:state.rates,
         payCurrency:state.payCurrency,
         getCurrency:state.getCurrency,
+        roundResult:state.roundResult
     }
  }
 export default connect(mapStateToProps)(Main);

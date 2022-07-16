@@ -4,12 +4,6 @@ import {connect} from 'react-redux';
 import Loader from './Loader';
 
 function Header(props) {
-    console.log(props.rates)
-// {EUR: 0.033539, USD: 0.033831, UAH: 1}
-// EUR: 0.033539
-// UAH: 1
-// USD: 0.033831
-// [[Prototype]]: Object
   return (
     <header className="header">
         <Container>
@@ -20,12 +14,12 @@ function Header(props) {
                 <Col className='display'>
                     <img className='display__flag' src='../assets/EUR.png' alt=''/>
                     <span className='display__name'>EUR</span>
-                    <span className='display__value'>{props.rates ? props.rates.EUR : <Loader/>}</span>
+                    <span className='display__value'>{props.rates ? props.roundResult(1/props.rates.EUR*1) : <Loader/>}</span>
                 </Col>
                 <Col className='display'>
                     <img className='display__flag' src='../assets/USD.png' alt=''/>
                     <span className='display__name'>USD</span>
-                    <span className='display__value'>{props.rates ? props.rates.USD : <Loader/>}</span>
+                    <span className='display__value'>{props.rates ? props.roundResult(1/props.rates.USD*1) : <Loader/>}</span>
                 </Col>
             </Row>
         </Container>
@@ -35,6 +29,7 @@ function Header(props) {
 function mapStateToProps(state){
     return {
         rates:state.rates,
+        roundResult:state.roundResult
     }
  }
 

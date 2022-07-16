@@ -10,6 +10,17 @@ const store = createStore(reducer,{
     rates:null,
     payCurrency:'UAH',
     getCurrency:'USD',
+    roundResult:(n)=>{
+        n+='';
+        let b=n.split('.');
+        if(b.length>1){
+            let rightPart=b[1][0]+b[1][1]+b[1][2];
+            let result=+`${b[0]}.${rightPart}`;
+            return result
+        }else{
+            return +n;
+        }
+    }
 })
 
 
