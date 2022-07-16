@@ -1,5 +1,5 @@
 import './main.scss';
-import { Container,Row,Form,Spinner } from 'react-bootstrap';
+import { Container,Row,Form} from 'react-bootstrap';
 import { useRef, useState } from 'react';
 import {connect} from 'react-redux';
 import Loader from './Loader';
@@ -7,68 +7,20 @@ import Loader from './Loader';
 
 
 function Main(props) {
-    let initialState={
-        payCurrency:props.payCurrency,
-        getCurrency:props.getCurrency
-    }
+
     const [payInpVal, setPayInpVal] = useState('');
     const [getInpVal, setGetInpVal] = useState('');
 
+//====================inputs ref====================
     let payInputRef=useRef(null);
     let getInputRef=useRef(null);
     let paySelectRef=useRef(null);
     let getSelectRef=useRef(null);
 
-function payInpHandler(){
-    setPayInpVal(payInputRef.current.value);
-    let val=payInputRef.current.value/props.rates[`${props.payCurrency}`]*props.rates[`${props.getCurrency}`];
-    setGetInpVal(props.roundResult(val));
-}
-
-function getInpHandler(){
-    setGetInpVal(getInputRef.current.value);
-    let val=getInputRef.current.value*props.rates[`${props.payCurrency}`]/props.rates[`${props.getCurrency}`];
-    setPayInpVal(props.roundResult(val));
-
-}
-
-
-function paySelectHandler(){
-    let flag=document.querySelector('.currency-flag--pay');
-    flag.setAttribute('src',`../assets/${paySelectRef.current.value}.png`);
-    payInputRef.current.setAttribute('placeholder', paySelectRef.current.value);
-    props.dispatch({
-        type:'CHANGED_PAY_CURRENCY',
-        payCurrency:paySelectRef.current.value,
-    })
-    setPayInpVal('')
-    payInputRef.current.focus();
-
-
-}
-
-function getSelectHandler(){
-    let flag=document.querySelector('.currency-flag--get');
-    flag.setAttribute('src',`../assets/${getSelectRef.current.value}.png`);
-    getInputRef.current.setAttribute('placeholder', getSelectRef.current.value);  
-    props.dispatch({
-        type:'CHANGED_GET_CURRENCY',
-        getCurrency:getSelectRef.current.value,
-    })
-    if(payInputRef.current.value!=''){
-        let val=payInputRef.current.value/props.rates[`${props.payCurrency}`]*props.rates[`${getSelectRef.current.value}`];
-        setGetInpVal(props.roundResult(val));
-    }else{
-        setGetInpVal('')
-        getInputRef.current.focus();
-    }
-    
-}
-
-
-let isSwaped=false;
-let payFormRef=useRef(null);
-let getFormRef=useRef(null);
+//====================FORMS REF====================
+    let isSwaped=false;
+    let payFormRef=useRef(null);
+    let getFormRef=useRef(null);
 
 function swapForms(){
     
@@ -79,21 +31,82 @@ function swapForms(){
         payFormRef.current.style.top='335px'
         getFormRef.current.style.top='200px'
     }
-    isSwaped=!isSwaped
+    isSwaped=!isSwaped  
+}
+
+function convert(amount, payWith, getTo){
+    return amount/payWith*getTo
+}
+
+//==================== INPUT HANDLERS ====================
+function payInputHandler(){
+    setPayInpVal(payInputRef.current.value);//print 
+    
+    let amount = payInputRef.current.value;
+    let payWith = props.rates[`${props.payCurrency}`];
+    let getWith = props.rates[`${props.getCurrency}`];
+    
+    let result=convert(amount, payWith, getWith);
+
+    setGetInpVal(result);
+
+    if(amount===0){
+        setGetInpVal('');
+    }
     
 }
 
+function getInputHandler(){
+    setGetInpVal(getInputRef.current.value);
 
-  
+    let amount = getInputRef.current.value;
+    let payWith = props.rates[`${props.getCurrency}`];
+    let getWith = props.rates[`${props.payCurrency}`];
+
+    let result=convert(amount, payWith, getWith);
+
+    setPayInpVal(result);
+
+    if(amount===0){
+        setPayInpVal('');
+    }
+}
+
+//==================== SELECT HANDLER ====================
+
+//------------------pushing arguments  
+// for (currencyFlagType) -- 'pay' or 'get'
+// for (selectVal) -- paySelectRef.current.value or getSelectRef.current.value
+// for (inputRef) -- payInputRef or getInputRef
+
+function selectHandler(currencyFlagType, selectVal, inputRef){
+    let flag=document.querySelector(`.currency-flag--${currencyFlagType}`);//gets img tag
+    flag.setAttribute('src',`../assets/${selectVal}.png`);// sets src of img tag
+    inputRef.current.setAttribute('placeholder', selectVal);// chngs plchldr into picked curency.
+
+    if(currencyFlagType==='pay'){
+        props.dispatch({
+            type:'CHANGED_PAY_CURRENCY',
+            payCurrency:selectVal,
+        })
+    }else{
+        props.dispatch({
+            type:'CHANGED_GET_CURRENCY',
+            getCurrency:selectVal,
+        })
+    }
+}
 
   return (
     <main className="main">  
         <Container>
+{/* ============================================================================================================================  */}
             <Row className='main-row'>
                 <h2 className='main-row__title--pay'>PAY</h2>
                 {props.rates===null ? <Loader/> :
                 <Form className='pay-form' ref={payFormRef}>
                 <fieldset className='form-fieldset '>
+{/* ================================    SELECT       =====================================================================*/}
                     <Form.Group>
                         <Form.Label htmlFor="payCurrencySel" className='currency-label'>
                         <img className='main-currency-flag currency-flag--pay' src={`../assets/UAH.png`} alt=''/>
@@ -101,7 +114,19 @@ function swapForms(){
                             ref={paySelectRef} 
                             id="payCurrencySel" 
                             onChange={()=>{
-                                paySelectHandler()
+                                selectHandler('pay', paySelectRef.current.value, payInputRef);
+                                    if(getInputRef.current.value===''){
+                                        payInputRef.current.focus();
+                                    }
+                                    else{
+                                        let amount = getInputRef.current.value;
+                                        let payWith = props.rates[`${props.getCurrency}`];
+                                        let getWith = props.rates[`${paySelectRef.current.value}`];
+                                    
+                                        let result=convert(amount, payWith, getWith);
+                                    
+                                        setPayInpVal(result);
+                                    } 
                             }}>
                                 <option value='UAH'>UAH</option>
                                 <option value='USD'>USD</option>
@@ -109,35 +134,46 @@ function swapForms(){
                             </Form.Select>
                         </Form.Label>
                     </Form.Group>
+{/*================================    PAY INPUT */}
                     <Form.Group >
                         <Form.Label htmlFor="payInp" className='input-label'>
-                            <Form.Control ref={payInputRef} id='payInp' placeholder='UAH' onChange={(e)=>{
-                                payInpHandler(e);
-                            }}  value={payInpVal}/>
+                            <Form.Control 
+                            type='number' 
+                            ref={payInputRef} 
+                            id='payInp' 
+                            placeholder='UAH'
+                            value={payInpVal} 
+                            onChange={(e)=>{
+                                payInputHandler(e);
+                            }}/>
+                            
                         </Form.Label>
                     </Form.Group>
+{/*==============================*/}
                 </fieldset>
                 </Form>
 }
             </Row>
+{/* =============================  */}
             <div className='swap-btn'>
-            {props.rates===null ? <h3>loading...</h3> :
+                {props.rates===null ? <h3>loading...</h3> :
                 <img 
-                onClick={()=>{
-                swapForms();
-                }} 
                 className='main-currency-flag currency-flag--pay' 
                 src={`../assets/circle.png`} 
-                alt=''
+                alt='switch button img'
+                onClick={()=>{
+                    swapForms();
+                }} 
                 />
             }
             </div>
-            {/* =============================================================== */}
+{/* ==================================================  */}
             <Row className='main-row'>
             <h2 className='main-row__title--get'>GET</h2>
             {props.rates===null ? <Loader/> :
             <Form className='get-form' ref={getFormRef}>
                     <fieldset className='form-fieldset '>
+{/* ================================    SELECT       ====================*/}
                         <Form.Group>
                             <Form.Label htmlFor="getCurrencySel" className='currency-label'>
                             <img className='main-currency-flag currency-flag--get' src={`../assets/USD.png`} alt=''/>
@@ -145,7 +181,18 @@ function swapForms(){
                                 ref={getSelectRef} 
                                 id="getCurrencySel" 
                                 onChange={()=>{
-                                    getSelectHandler()
+                                    selectHandler('get', getSelectRef.current.value, getInputRef)
+                                    if(payInputRef.current.value===''){
+                                        getInputRef.current.focus();
+                                    }
+                                    else{
+                                        let amount = payInputRef.current.value;
+                                        let payWith = props.rates[`${props.payCurrency}`];
+                                        let getWith = props.rates[`${getSelectRef.current.value}`];
+                                        let result=convert(amount, payWith, getWith);   
+                                        setGetInpVal(result);
+                                        
+                                    }
                                 }}>
                                     <option value='USD'>USD</option>
                                     <option value='UAH'>UAH</option>
@@ -153,15 +200,21 @@ function swapForms(){
                                 </Form.Select>
                              </Form.Label>
                         </Form.Group>
-                    
+{/* ================================    GET INPUT ============            */}
                         <Form.Group >
                             <Form.Label htmlFor="getInp" className='input-label'>
-                                <Form.Control ref={getInputRef} onChange={()=>{
-                                    getInpHandler();
-                                }}  id='getInp' placeholder='USD' value={getInpVal} />
+                                <Form.Control 
+                                type='number' 
+                                ref={getInputRef} 
+                                id='getInp' 
+                                placeholder='USD' 
+                                value={getInpVal} 
+                                onChange={()=>{
+                                    getInputHandler();
+                                }}/>
                             </Form.Label>
                         </Form.Group>
-
+{/* ===========================================================================             */}
                         
                     </fieldset>
                 </Form>
@@ -172,12 +225,12 @@ function swapForms(){
   );
 }
 
+{/* ==========================================  END  ===========================             */}
  function mapStateToProps(state){
     return {
         rates:state.rates,
         payCurrency:state.payCurrency,
         getCurrency:state.getCurrency,
-        roundResult:state.roundResult
     }
  }
 export default connect(mapStateToProps)(Main);

@@ -7,20 +7,9 @@ import {createStore} from 'redux';
 import reducer from '../src/redux/reducer';
 
 const store = createStore(reducer,{
-    rates:null,
+    rates:{EUR: 0.03341, USD: 0.03372, UAH: 1},
     payCurrency:'UAH',
     getCurrency:'USD',
-    roundResult:(n)=>{
-        n+='';
-        let b=n.split('.');
-        if(b.length>1){
-            let rightPart=b[1][0]+b[1][1]+b[1][2];
-            let result=+`${b[0]}.${rightPart}`;
-            return result
-        }else{
-            return +n;
-        }
-    }
 })
 
 

@@ -64,14 +64,13 @@
     display: flex;
     justify-content:center;
     img{
-        margin:30px 0px -15px 0px;
         width: 30px;
         height: 30px;
+        margin:30px 0px -15px 0px;
     }
 }
 
-
-.pay-form{
+.pay-form,.get-form{
     position: absolute;
     z-index: 38;
     top: 200px;
@@ -79,12 +78,14 @@
     transition: all ease 1s;
 }
 
+
+
+.pay-form{
+    top: 200px;
+}
+
 .get-form{
-    position: absolute;
-    z-index: 8;
     top: 335px;
-    background-color: white;
-    transition: all ease 1s;
 }
 
 
