@@ -8,7 +8,7 @@ function App(props) {
   useEffect(()=>{
     if(props.rates===null){
         let myHeaders = new Headers();
-        myHeaders.append("apikey", "zBfs7Tverk6GuiYZI5TIcinPr16h8T0V");
+        myHeaders.append("apikey", "iGiztYWrMCToyd7y7XEFnyZPVKGAqbR6");
 
         let requestOptions = {
         method: 'GET',

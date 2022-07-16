@@ -1,6 +1,9 @@
 .header{
 box-shadow: 0px 1px 3px lightgrey;
+background-color: whitesmoke;
 }
+
+
 
 .header-row{
     height: 120px;
@@ -9,37 +12,48 @@ box-shadow: 0px 1px 3px lightgrey;
     flex-direction: row;
     justify-content: flex-end;
     position: relative;
+    
+
+    @media screen and (max-width: 468px) {
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: center;
+      }
 }
 
 .header__logo{
     width: 100px;
+    height: auto;
     align-self: center;
     position: absolute;
     left: 50%;
     margin-left: -50px;
+    @media screen and (max-width: 870px) {
+        width: 80px;
+        left: 60px;
+        top: 50%;
+        margin-top: -40px;
+      }
 }
 
 
 .display{
     display: flex;
     align-items: center;
-    margin-right: 15px;
+    margin-right: 5px;
+    padding: 3px 5px;
+    box-shadow: 1px 1px 3px grey;
+    border-radius: 5px;
     img{
         margin: 0px 5px;
     }
     span{
         margin-left: 5px;
+        min-width: 40px;
     }
 }
 
 .display__flag{
     width: 30px;
     height: auto;
-}
-
-.display__name {
-}
-
-.display__value{
-
 }
