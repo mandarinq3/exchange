@@ -7,7 +7,7 @@ import {createStore} from 'redux';
 import reducer from '../src/redux/reducer';
 
 const store = createStore(reducer,{
-    rates:{EUR: 0.03341, USD: 0.03372, UAH: 1},
+    rates:null,
     payCurrency:'UAH',
     getCurrency:'USD',
 })
