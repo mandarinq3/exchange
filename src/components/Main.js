@@ -21,7 +21,20 @@ function Main(props) {
     let isSwaped=false;
     let payFormRef=useRef(null);
     let getFormRef=useRef(null);
+//========================================
+    let clearBtns=document.querySelectorAll('.clear-btn');
 
+    function showClearBtns(shouldShow){
+        clearBtns.forEach((btn)=>{
+            if(shouldShow==true){
+                btn.classList.add('clear-btn--show');
+            }else{
+                btn.classList.remove('clear-btn--show');
+            }
+            
+        })
+    }
+//========================================
 function swapForms(){
     
     if(isSwaped){
@@ -34,6 +47,20 @@ function swapForms(){
     isSwaped=!isSwaped  
 }
 
+//========================================
+function clearInput(e){
+    e.preventDefault();
+    showClearBtns(false);
+    let targetInput = document.querySelector(`#${e.currentTarget.dataset.id}`);
+    if(targetInput.value==''){
+        targetInput.focus();
+    }else{
+        setPayInpVal('');
+        setGetInpVal('');
+        targetInput.focus();
+    }
+}
+//========================================
 function convert(amount, payWith, getTo){
     return amount/payWith*getTo
 }
@@ -41,6 +68,7 @@ function convert(amount, payWith, getTo){
 //==================== INPUT HANDLERS ====================
 function payInputHandler(){
     setPayInpVal(payInputRef.current.value);//print 
+    showClearBtns(true);
     
     let amount = payInputRef.current.value;
     let payWith = props.rates[`${props.payCurrency}`];
@@ -50,14 +78,16 @@ function payInputHandler(){
 
     setGetInpVal(result);
 
-    if(amount===0){
+    if(amount===''){
         setGetInpVal('');
+        showClearBtns(false);
     }
     
 }
 
 function getInputHandler(){
-    setGetInpVal(getInputRef.current.value);
+    setGetInpVal(getInputRef.current.value);//print
+    showClearBtns(true);//show or hide
 
     let amount = getInputRef.current.value;
     let payWith = props.rates[`${props.getCurrency}`];
@@ -67,8 +97,9 @@ function getInputHandler(){
 
     setPayInpVal(result);
 
-    if(amount===0){
+    if(amount===''){
         setPayInpVal('');
+        showClearBtns(false);
     }
 }
 
@@ -105,7 +136,15 @@ function selectHandler(currencyFlagType, selectVal, inputRef){
                 <h2 className='main-row__title--pay'>PAY</h2>
                 {props.rates===null ? <Loader/> :
                 <Form className='pay-form' ref={payFormRef}>
-                <fieldset className='form-fieldset '>
+                <fieldset 
+                className='form-fieldset '
+                onFocus={(e)=>{
+                    e.currentTarget.style.border=' 2px solid rgb(255, 208, 0)';
+                }}
+                onBlur={(e)=>{
+                    e.currentTarget.style.border=' 0px solid red';
+                }}
+                >
 {/* ================================    SELECT       =====================================================================*/}
                     <Form.Group>
                         <Form.Label htmlFor="payCurrencySel" className='currency-label'>
@@ -149,8 +188,18 @@ function selectHandler(currencyFlagType, selectVal, inputRef){
                             
                         </Form.Label>
                     </Form.Group>
+                    
 {/*==============================*/}
                 </fieldset>
+                <button 
+                className='clear-btn' 
+                data-id='payInp'
+                onClick={(e)=>{
+                    clearInput(e);
+                }}
+                >
+                    clear
+                </button>
                 </Form>
 }
             </Row>
@@ -172,7 +221,15 @@ function selectHandler(currencyFlagType, selectVal, inputRef){
             <h2 className='main-row__title--get'>GET</h2>
             {props.rates===null ? <Loader/> :
             <Form className='get-form' ref={getFormRef}>
-                    <fieldset className='form-fieldset '>
+                    <fieldset 
+                    className='form-fieldset' 
+                    onFocus={(e)=>{
+                        e.currentTarget.style.border=' 2px solid rgba(33,163,255,1)';
+                    }}
+                    onBlur={(e)=>{
+                        e.currentTarget.style.border=' 0px solid red';
+                    }}
+                    >
 {/* ================================    SELECT       ====================*/}
                         <Form.Group>
                             <Form.Label htmlFor="getCurrencySel" className='currency-label'>
@@ -211,12 +268,22 @@ function selectHandler(currencyFlagType, selectVal, inputRef){
                                 value={getInpVal} 
                                 onChange={()=>{
                                     getInputHandler();
-                                }}/>
+                                }}
+                                />
                             </Form.Label>
                         </Form.Group>
 {/* ===========================================================================             */}
                         
                     </fieldset>
+                    <button 
+                    className='clear-btn' 
+                    data-id='getInp'
+                    onClick={(e)=>{
+                        clearInput(e);
+                    }}
+                    >
+                    clear
+                </button>
                 </Form>
 }
             </Row>

@@ -14,7 +14,7 @@
     box-shadow: 2px 1px 3px dimgrey;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-end;
     border-radius: 10px;
     overflow: auto;
     padding: 5px 5px;
@@ -25,7 +25,8 @@
         outline: 0px;
     }
     input{
-        padding: 0px 10px;
+        padding: 0px 10px 0px 0px;
+        width: 210px;
     }
 }
 
@@ -86,6 +87,22 @@
 
 .get-form{
     top: 335px;
+}
+
+.clear-btn{
+    display: none;
+    width: 50px;
+    background-color:red;
+    color: white;
+    position: absolute;
+    right: 10px;
+    top: 50px;
+    border-radius: 5px;
+    transition: all ease 0.5s;
+} 
+
+.clear-btn--show{
+    display: block;
 }
 
 
