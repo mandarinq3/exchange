@@ -1,8 +1,9 @@
 import './main.scss';
-import { Container,Row,Form} from 'react-bootstrap';
+import { Container,Row,Col,Form} from 'react-bootstrap';
 import { useRef, useState } from 'react';
 import {connect} from 'react-redux';
 import Loader from './Loader';
+import Graphic from './Graphic';
 
 
 
@@ -285,7 +286,11 @@ function selectHandler(currencyFlagType, selectVal, inputRef){
                     clear
                 </button>
                 </Form>
-}
+                
+}           <Row className='main-row main-row--grapics'>
+                <Col><Graphic pair='EUR' canvasId='eur'/></Col>
+                <Col><Graphic pair='USD' canvasId='usd'/></Col>
+            </Row>
             </Row>
         </Container>
     </main>

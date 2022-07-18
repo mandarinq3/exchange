@@ -1,0 +1,46 @@
+.graphics-section{
+    margin: 5px 5px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    span{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: rgb(13, 142, 228);
+        border-radius: 5px;
+        color: white;
+        font-size: 18px;
+        height: 30px;
+        padding: 0px 10px;
+    }
+    canvas{
+        position: relative;
+        width: 100%;
+        background-color: rgb(238, 247, 253) ;
+        border-radius: 5px;
+    }
+}
+
+.datesLine{
+    position: absolute;
+    bottom: 0;
+    border-left: 1px dashed rgb(13, 142, 228);
+    height: 100px;
+    display: flex;
+    align-items: flex-end;
+    span{
+        position: absolute;
+        left: -9px;
+        font-size: 9px;
+        width: 18px;
+        height: 18px;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+}
+
